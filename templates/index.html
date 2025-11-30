@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Système Intelligent de Prédiction d'AVC</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ✅ Keep your full CSS exactly as you wrote it */
+    :root {
+      --primary-color: #0ea5e9;
+      --primary-dark: #0284c7;
+      --secondary-color: #64748b;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-light: #64748b;
+      --border-color: #e2e8f0;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+    }
+    .logo-section { display: flex; align-items: center; gap: 1rem; }
+    .logo-icon { font-size: 1.8rem; color: var(--primary-color); }
+    .app-title h1 { font-size: 1.25rem; font-weight: 700; }
+    .app-title p { font-size: 0.875rem; color: var(--text-light); }
+    .sponsors { display: flex; gap: 1.5rem; font-size: 0.85rem; font-weight: 600; color: var(--secondary-color); align-items: center; }
+    .sponsor-badge { background: #f1f5f9; padding: 0.25rem 0.75rem; border-radius: 20px; border: 1px solid var(--border-color); }
+
+    .main-container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 2rem auto;
+      width: 100%;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 900px) { .main-container { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2rem;
+      border: 1px solid var(--border-color);
+      height: fit-content;
+    }
+    .card-header { margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; }
+    .card-title { font-size: 1.25rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .full-width { grid-column: 1 / -1; }
+
+    label { font-size: 0.9rem; font-weight: 500; }
+    input, select {
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      background-color: #fff;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+
+    .btn-submit {
+      grid-column: 1 / -1;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .btn-submit:hover { background-color: var(--primary-dark); }
+
+    .results-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      opacity: 0.6;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .results-panel.active { opacity: 1; pointer-events: all; }
+
+    .result-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; text-align: center; }
+    .risk-visual { padding: 2.5rem 1.5rem; background: linear-gradient(to bottom right, #f8fafc, #ffffff); position: relative; }
+
+    .gauge-container { width: 180px; height: 180px; margin: 0 auto 1.5rem; }
+    .circular-chart { display: block; margin: 0 auto; max-width: 100%; max-height: 100%; }
+
+    .circle-bg { fill: none; stroke: #e2e8f0; stroke-width: 2.5; }
+    .circle { fill: none; stroke-width: 2.5; stroke-linecap: round; transition: stroke-dasharray 0.8s ease, stroke 0.5s ease; }
+    .percentage { fill: var(--text-main); font-weight: bold; font-size: 0.5em; text-anchor: middle; }
+    .risk-label { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .risk-badge { display: inline-block; padding: 0.5rem 1rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .risk-low { color: var(--success-color); background: #d1fae5; border: 1px solid #10b981; }
+    .risk-moderate { color: var(--warning-color); background: #fef3c7; border: 1px solid #f59e0b; }
+    .risk-high { color: var(--danger-color); background: #fee2e2; border: 1px solid #ef4444; }
+
+    .stroke-low { stroke: var(--success-color); }
+    .stroke-moderate { stroke: var(--warning-color); }
+    .stroke-high { stroke: var(--danger-color); }
+
+    .factors-list { padding: 1.5rem; text-align: left; border-top: 1px solid var(--border-color); }
+    .factors-list h3 { margin-bottom: 1rem; color: var(--text-light); text-transform: uppercase; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.05em; }
+
+    .factor-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+    .factor-icon { color: var(--secondary-color); margin-top: 2px; }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      border-radius: var(--radius);
+      z-index: 10;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e2e8f0;
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% {transform: rotate(0deg);} 100% {transform: rotate(360deg);} }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo-section">
+      <i class="fa-solid fa-brain logo-icon"></i>
+      <div class="app-title">
+        <h1>NeuroGuard AI</h1>
+        <p>Système Intelligent de Prédiction d'AVC</p>
+      </div>
+    </div>
+    <div class="sponsors">
+      <span class="sponsor-badge">IEEE Sesame</span>
+      <span class="sponsor-badge">JCI</span>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- LEFT -->
+    <section class="card">
+      <div class="card-header">
+        <h2 class="card-title"><i class="fa-solid fa-user-doctor"></i> Données Patient</h2>
+      </div>
+
+      <form id="predictionForm">
+        <div class="form-grid">
+
+          <div class="full-width" style="margin-top:-0.5rem; margin-bottom:-0.5rem;">
+            <small style="color:var(--primary-color); font-weight:600;">DEMOGRAPHIE</small>
+          </div>
+
+          <div class="form-group">
+            <label for="age">Âge</label>
+            <input type="number" id="age" name="age" placeholder="ex: 65" required min="1" max="120">
+          </div>
+
+          <div class="form-group">
+            <label for="gender">Genre</label>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected>Choisir...</option>
+              <option value="Male">Homme</option>
+              <option value="Female">Femme</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="residence">Type de Résidence</label>
+            <select id="residence" name="residence">
+              <option value="Urban">Urbain</option>
+              <option value="Rural">Rural</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="married">Statut Marital</label>
+            <select id="married" name="married">
+              <option value="Yes">Marié(e)</option>
+              <option value="No">Non Marié(e)</option>
+            </select>
+          </div>
+
+          <div class="full-width" style="margin-top:0.5rem; margin-bottom:-0.5rem;">
+            <small style="color:var(--primary-color); font-weight:600;">PHYSIOLOGIE</small>
+          </div>
+
+          <div class="form-group">
+            <label for="glucose">Niveau Moyen de Glucose (mg/dL)</label>
+            <input type="number" id="glucose" name="avg_glucose_level" placeholder="ex: 105.5" step="0.1" required>
+          </div>
+
+          <div class="form-group">
+            <label for="bmi">IMC (Indice de Masse Corporelle)</label>
+            <input type="number" id="bmi" name="bmi" placeholder="Laisser vide si inconnu" step="0.1">
+            <small style="font-size:0.75rem; color:var(--text-light);">* Sera imputé automatiquement si vide</small>
+          </div>
+
+          <div class="full-width" style="margin-top:0.5rem; margin-bottom:-0.5rem;">
+            <small style="color:var(--primary-color); font-weight:600;">ANTÉCÉDENTS</small>
+          </div>
+
+          <div class="form-group">
+            <label for="hypertension">Hypertension</label>
+            <select id="hypertension" name="hypertension" required>
+              <option value="0">Non</option>
+              <option value="1">Oui</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="heart_disease">Maladie Cardiaque</label>
+            <select id="heart_disease" name="heart_disease" required>
+              <option value="0">Non</option>
+              <option value="1">Oui</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="smoking">Tabagisme</label>
+            <select id="smoking" name="smoking_status" required>
+              <option value="never smoked">Jamais fumé</option>
+              <option value="formerly smoked">Ancien fumeur</option>
+              <option value="smokes">Fumeur actuel</option>
+              <option value="Unknown">Inconnu</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-calculator"></i> Analyser les Risques
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- RIGHT -->
+    <section class="results-panel" id="resultsPanel">
+      <div class="result-card">
+        <div class="risk-visual">
+          <div class="loading-overlay" id="loader">
+            <div class="spinner"></div>
+          </div>
+
+          <div class="gauge-container">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path class="circle-bg"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" id="riskCircle"
+                stroke-dasharray="0, 100"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <text x="18" y="20.35" class="percentage" id="riskPercentage">0%</text>
+            </svg>
+          </div>
+
+          <h2 class="risk-label" id="riskLabel">En attente</h2>
+          <span class="risk-badge" id="riskBadge">--</span>
+        </div>
+
+        <div class="factors-list">
+          <h3>Facteurs Aggravants Détectés</h3>
+          <div id="factorsContainer">
+            <p style="font-style:italic; color:#94a3b8; font-size:0.9rem;">Aucune donnée analysée.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ✅ ONE SCRIPT ONLY -->
+  <script>
+    const form = document.getElementById('predictionForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const resultsPanel = document.getElementById('resultsPanel');
+      const loader = document.getElementById('loader');
+      resultsPanel.classList.add('active');
+      loader.style.display = 'flex';
+
+      const payload = {
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        Residence_type: document.getElementById('residence').value,
+        ever_married: document.getElementById('married').value,
+        work_type: "Private",
+        smoking_status: document.getElementById('smoking').value,
+        avg_glucose_level: document.getElementById('glucose').value,
+        bmi: document.getElementById('bmi').value || null,
+        hypertension: document.getElementById('hypertension').value,
+        heart_disease: document.getElementById('heart_disease').value
+      };
+
+      // client-side validation (prevents age None)
+      if (!payload.age || !payload.avg_glucose_level || !payload.gender) {
+        loader.style.display = 'none';
+        alert("Veuillez remplir Âge, Genre et Glucose.");
+        return;
+      }
+
+      console.log("Sending payload:", payload);
+
+      try {
+        const resp = await fetch("/predict", {
+          method: "POST",
+          headers: {"Content-Type":"application/json"},
+          body: JSON.stringify(payload)
+        });
+
+        const text = await resp.text();
+        if (!resp.ok) {
+          console.error("Server error:", resp.status, text);
+          alert("Erreur /predict ("+resp.status+"): " + text);
+          return;
+        }
+
+        const data = JSON.parse(text);
+        renderResult(data);
+
+      } catch (err) {
+        console.error("Network/JS error:", err);
+        alert("Impossible de contacter Flask /predict.");
+      } finally {
+        loader.style.display = 'none';
+      }
+    });
+
+    function renderResult(data) {
+      const probability = data.percentage; // %
+      const level = data.risk_level;
+      const factors = data.factors || [];
+
+      const circle = document.getElementById('riskCircle');
+      const percentageText = document.getElementById('riskPercentage');
+      const badge = document.getElementById('riskBadge');
+      const label = document.getElementById('riskLabel');
+      const factorsContainer = document.getElementById('factorsContainer');
+
+      circle.classList.remove('stroke-low','stroke-moderate','stroke-high');
+      badge.classList.remove('risk-low','risk-moderate','risk-high');
+
+      percentageText.textContent = probability + "%";
+      circle.setAttribute('stroke-dasharray', `${probability}, 100`);
+
+      if (level === "low") {
+        label.textContent = "Risque Faible";
+        badge.textContent = "Sûr";
+        badge.classList.add('risk-low');
+        circle.classList.add('stroke-low');
+      } else if (level === "moderate") {
+        label.textContent = "Risque Modéré";
+        badge.textContent = "Attention";
+        badge.classList.add('risk-moderate');
+        circle.classList.add('stroke-moderate');
+      } else {
+        label.textContent = "Risque Élevé";
+        badge.textContent = "Danger";
+        badge.classList.add('risk-high');
+        circle.classList.add('stroke-high');
+      }
+
+      factorsContainer.innerHTML = "";
+      if (factors.length) {
+        factors.forEach(f => {
+          const div = document.createElement("div");
+          div.className = "factor-item";
+          div.innerHTML = `<i class="fa-solid fa-triangle-exclamation factor-icon"></i><span>${f}</span>`;
+          factorsContainer.appendChild(div);
+        });
+      } else {
+        factorsContainer.innerHTML = `<p style="color:#10b981; font-size:0.9rem;">
+          <i class="fa-solid fa-check-circle"></i> Aucun facteur majeur.
+        </p>`;
+      }
+    }
+  </script>
+</body>
+</html>

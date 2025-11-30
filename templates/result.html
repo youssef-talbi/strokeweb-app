@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Result | Stroke Risk Predictor{% endblock %}
+
+{% block content %}
+    <section class="result-section">
+        <h2 class="section-title">Your Stroke Risk Assessment</h2>
+        <div class="result-summary">
+            <p class="result-probability">Predicted Probability: <strong>{{ probability }}%</strong></p>
+            <p class="result-category">
+                Initial Classification: <span id="risk-category" class="risk-label {{ 'high' if risk_category == 'High Risk' else 'low' }}">{{ risk_category }}</span>
+            </p>
+        </div>
+        <div class="threshold-control">
+            <label for="threshold-slider">Adjust alert threshold:</label>
+            <input type="range" id="threshold-slider" name="threshold" min="0" max="100" value="50">
+            <span id="threshold-value">50%</span>
+        </div>
+        <div class="tips-section">
+            <h3>Health Tips</h3>
+            <ul>
+                {% for tip in tips %}
+                <li>{{ tip }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="back-link">
+            <a href="/" class="btn-secondary">Predict Again</a>
+        </div>
+    </section>
+
+    <!-- Hidden element to pass probability to script -->
+    <input type="hidden" id="probability-hidden" value="{{ probability }}">
+{% endblock %}

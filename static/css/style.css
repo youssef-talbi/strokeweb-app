@@ -1,0 +1,231 @@
+/* General layout */
+.site-header {
+    background-color: #1e293b;
+    color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+.navbar-links .nav-link {
+    margin-left: 1rem;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 500;
+}
+.navbar-links .nav-link:hover {
+    color: #fff;
+}
+
+.site-footer {
+    background-color: #1e293b;
+    color: #cbd5e1;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 3rem;
+    font-size: 0.85rem;
+}
+
+/* Hero section */
+.hero-section {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background-color: #0f172a;
+    color: #f8fafc;
+}
+.hero-content {
+    flex: 1 1 50%;
+    max-width: 600px;
+    padding-right: 2rem;
+}
+.hero-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+.hero-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.hero-image-wrapper {
+    flex: 1 1 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero-image {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Form section */
+.form-section {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+}
+.section-title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: #1e293b;
+    font-weight: 600;
+    text-align: center;
+}
+.prediction-form {
+    width: 100%;
+}
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem 1.5rem;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+.form-group label {
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+}
+.form-group input,
+.form-group select {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #f9fafb;
+}
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+}
+.form-action {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+.btn-submit {
+    background-color: #6366f1;
+    color: #fff;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.btn-submit:hover {
+    background-color: #4f46e5;
+}
+
+/* Result page */
+.result-section {
+    max-width: 800px;
+    margin: 2rem auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.result-summary {
+    margin-bottom: 1.5rem;
+}
+.result-probability {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+.result-category {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+.risk-label {
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    margin-left: 0.3rem;
+}
+.risk-label.high {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.risk-label.low {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.threshold-control {
+    margin-bottom: 1.5rem;
+}
+.threshold-control label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+.threshold-control input[type="range"] {
+    width: 100%;
+}
+#threshold-value {
+    font-weight: 500;
+    margin-left: 0.5rem;
+}
+.tips-section {
+    margin-bottom: 2rem;
+}
+.tips-section ul {
+    padding-left: 1.2rem;
+}
+.tips-section li {
+    margin-bottom: 0.5rem;
+}
+.btn-secondary {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #f3f4f6;
+    color: #1e293b;
+    padding: 0.6rem 1.4rem;
+    border-radius: 6px;
+    font-weight: 500;
+}
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 1.5rem;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+    .hero-image {
+        max-width: 250px;
+    }
+    .form-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
